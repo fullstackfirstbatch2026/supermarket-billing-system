@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FreshMart | Supermarket Billing</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">F</div>
+
+            <div>
+                <h2>FreshMart<span>.</span></h2>
+                <p>SUPERMARKET POS</p>
+            </div>
+        </div>
+
+        <div class="sidebar-label">WORKSPACE</div>
+
+        <nav class="navigation">
+            <a href="#dashboard" class="nav-item active">
+                <span class="nav-icon">▦</span>
+                Dashboard
+            </a>
+
+            <a href="#products-section" class="nav-item">
+                <span class="nav-icon">▤</span>
+                Products
+            </a>
+
+            <a href="#billing-section" class="nav-item">
+                <span class="nav-icon">▣</span>
+                Billing & Checkout
+            </a>
+
+            <a href="#customers-section" class="nav-item">
+                <span class="nav-icon">♙</span>
+                Customers
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="store-status">
+                <span class="status-dot"></span>
+
+                <div>
+                    <strong>Store online</strong>
+                    <small>Inventory connected</small>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                FreshMart Billing System<br>
+                <span>Powered by Spring Boot</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+
+            <div>
+                <div class="breadcrumb">Workspace / Overview</div>
+                <h1>Good day, Store Manager 👋</h1>
+                <p class="subtitle">Manage your store and serve customers faster.</p>
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="live-status">
+                    <span class="status-dot"></span>
+                    Live inventory
+                </div>
+
+                <button class="icon-button"
+                        onclick="loadDashboard()"
+                        title="Refresh data">
+                    ↻
+                </button>
+
+                <div class="avatar">FM</div>
+
+            </div>
+
+        </header>
+
+
+        <!-- DASHBOARD -->
+        <section id="dashboard">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Store overview</h2>
+                    <p>Your business at a glance.</p>
+                </div>
+
+                <span class="date-badge" id="currentDate"></span>
+            </div>
+
+
+            <!-- STAT CARDS -->
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span class="stat-label">Total products</span>
+                        <span class="stat-icon green">▤</span>
+                    </div>
+
+                    <h3 id="totalProducts">--</h3>
+                    <p>Products in catalogue</p>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span class="stat-label">Customers</span>
+                        <span class="stat-icon purple">♙</span>
+                    </div>
+
+                    <h3 id="totalCustomers">--</h3>
+                    <p>Registered customers</p>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span class="stat-label">Sales records</span>
+                        <span class="stat-icon orange">▣</span>
+                    </div>
+
+                    <h3 id="totalSales">--</h3>
+                    <p>Recorded transactions</p>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span class="stat-label">Low stock items</span>
+                        <span class="stat-icon red">!</span>
+                    </div>
+
+                    <h3 id="lowStockProducts">--</h3>
+                    <p>Products with stock below 5</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- SHOPPING / BILLING WORKSPACE -->
+        <section class="workspace-grid">
+
+            <!-- PRODUCT CATALOGUE -->
+            <div class="catalog-panel" id="products-section">
+
+                <div class="section-heading catalogue-heading">
+                    <div>
+                        <h2>Product catalogue</h2>
+                        <p>Find products and add them to the bill.</p>
+                    </div>
+
+                    <span class="count-badge" id="productCount">0 items</span>
+                </div>
+
+
+                <!-- SEARCH -->
+                <div class="search-box">
+                    <span>⌕</span>
+
+                    <input type="search"
+                           id="productSearch"
+                           placeholder="Search products..."
+                           autocomplete="off">
+                </div>
+
+
+                <!-- CATEGORY FILTERS -->
+                <div class="category-filters" id="categoryFilters">
+                    <button class="category-chip active"
+                            data-category="all">
+                        All products
+                    </button>
+                </div>
+
+
+                <!-- PRODUCTS -->
+                <div class="product-grid" id="productGrid">
+
+                    <div class="loading-card">
+                        Loading products...
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- BILLING CART -->
+            <aside class="billing-panel" id="billing-section">
+
+                <div class="billing-header">
+                    <div>
+                        <span class="eyebrow">CURRENT TRANSACTION</span>
+                        <h2>New bill <span class="bill-dot"></span></h2>
+                    </div>
+
+                    <button class="text-button"
+                            onclick="clearCart()">
+                        Clear
+                    </button>
+                </div>
+
+
+                <!-- CUSTOMER -->
+                <div class="customer-field" id="customers-section">
+
+                    <label for="customerSelect">Customer</label>
+
+                    <select id="customerSelect">
+                        <option value="">Loading customers...</option>
+                    </select>
+
+                </div>
+
+
+                <!-- CART ITEMS -->
+                <div class="cart-title">
+                    <span>Bill items</span>
+                    <span id="cartItemCount">0 items</span>
+                </div>
+
+
+                <div class="cart-items" id="cartItems">
+
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">🛒</div>
+                        <h3>Your cart is empty</h3>
+                        <p>Add products from the catalogue to start billing.</p>
+                    </div>
+
+                </div>
+
+
+                <!-- TOTALS -->
+                <div class="bill-summary">
+
+                    <div class="summary-row">
+                        <span>Items subtotal</span>
+                        <strong id="subtotal">₹0.00</strong>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Discount</span>
+                        <strong id="discount">₹0.00</strong>
+                    </div>
+
+                    <div class="summary-divider"></div>
+
+                    <div class="summary-total">
+                        <span>Total payable</span>
+                        <strong id="grandTotal">₹0.00</strong>
+                    </div>
+
+                    <p class="tax-note">
+                        Prices are based on the product catalogue.
+                    </p>
+
+                </div>
+
+
+                <button class="checkout-button"
+                        id="checkoutButton"
+                        onclick="checkout()">
+
+                    <span>Complete checkout</span>
+                    <span>→</span>
+
+                </button>
+
+                <div class="secure-note">
+                    <span>✓</span>
+                    Inventory is updated after successful sale items.
+                </div>
+
+            </aside>
+
+        </section>
+
+
+        <!-- RECENT SALES -->
+        <section class="recent-sales-section">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Recent sales</h2>
+                    <p>Latest transactions recorded in the system.</p>
+                </div>
+
+                <button class="secondary-button"
+                        onclick="loadSales()">
+                    Refresh sales
+                </button>
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>SALE ID</th>
+                        <th>CUSTOMER</th>
+                        <th>DATE</th>
+                        <th>STATUS</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="salesTableBody">
+                    <tr>
+                        <td colspan="4" class="table-loading">
+                            Loading sales...
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <footer class="main-footer">
+            <span>© <span id="currentYear"></span> FreshMart Billing System</span>
+            <span>Smart billing. Fresh shopping.</span>
+        </footer>
+
+    </main>
+
+</div>
+
+
+<!-- NOTIFICATION -->
+<div id="toast" class="toast"></div>
+
+
+<!-- INVOICE MODAL -->
+<div id="invoiceModal" class="modal-overlay">
+
+    <div class="invoice-modal">
+
+        <div class="invoice-success">✓</div>
+
+        <h2>Sale completed!</h2>
+
+        <p class="invoice-description">
+            Your transaction has been recorded successfully.
+        </p>
+
+        <div class="invoice-details">
+
+            <div class="invoice-row">
+                <span>Invoice number</span>
+                <strong id="invoiceSaleId">--</strong>
+            </div>
+
+            <div class="invoice-row">
+                <span>Customer</span>
+                <strong id="invoiceCustomer">--</strong>
+            </div>
+
+            <div class="invoice-row">
+                <span>Invoice total</span>
+                <strong id="invoiceTotal">₹0.00</strong>
+            </div>
+
+        </div>
+
+        <button class="checkout-button"
+                onclick="closeInvoice()">
+            Done
+        </button>
+
+    </div>
+
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
